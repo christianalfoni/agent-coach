@@ -2,7 +2,7 @@
 
 Lighthouse scores for Claude Code readiness.
 
-Unlike static analysis tools that check for the presence of files, `repo-score` actually runs Claude Code against your repo and measures what happens — then passes the session transcript to a judgment agent that produces a specific, grounded report.
+Unlike static analysis tools that check for the presence of files, `claude-beacon` actually runs Claude Code against your repo and measures what happens — then passes the session transcript to a judgment agent that produces a specific, grounded report.
 
 ## How it works
 
@@ -34,12 +34,15 @@ Or download a binary directly from the [latest release](https://github.com/chris
 
 ## Usage
 
-```bash
+```sh
 # Interactive — choose a dimension from a menu
-bun run src/index.ts /path/to/your/repo
+claude-beacon /path/to/your/repo
 
 # Non-interactive — run a specific dimension directly
-bun run src/index.ts /path/to/your/repo --dimension environment
+claude-beacon /path/to/your/repo --dimension environment
+
+# Run against the current directory
+claude-beacon
 ```
 
 Available dimensions: `environment`, `instructions`, `navigation`, `contract`, `tests`, `verification`
@@ -56,14 +59,5 @@ Re-run the dimension afterward to see the delta.
 
 ## Requirements
 
-- [Bun](https://bun.com)
 - [Claude Code](https://claude.ai/code) installed and authenticated (`claude` in PATH)
 - A git repository (required for Environment Reproducibility; recommended for all dimensions)
-
-## Build a binary
-
-```bash
-bun run build
-```
-
-Produces a standalone `repo-score` binary with no runtime dependencies.
