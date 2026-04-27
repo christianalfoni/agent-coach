@@ -24,6 +24,14 @@ For each dimension, the tool:
 | **Test Surface** | Runs the test suite, samples coverage, deliberately introduces a bug to see if tests catch it |
 | **Verification Surface** | Makes real changes across different zones of the repo and tries to verify each one |
 
+## Install
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/christianalfoni/claude-beacon/main/install.sh | sh
+```
+
+Or download a binary directly from the [latest release](https://github.com/christianalfoni/claude-beacon/releases/latest).
+
 ## Usage
 
 ```bash
