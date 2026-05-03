@@ -1,4 +1,3 @@
-#!/usr/bin/env bun
 import { readFileSync } from "fs";
 import { preprocessSession, formatEvents } from "./preprocessor";
 import { runContribution } from "./contribution";
