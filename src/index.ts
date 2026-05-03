@@ -4,6 +4,7 @@ import { preprocessSession, formatEvents } from "./preprocessor";
 import { runContribution } from "./contribution";
 import { judge } from "./judge";
 import { findCurrentSession } from "./session";
+import { runSetup } from "./setup";
 import * as environment from "./dimensions/environment";
 import * as instructions from "./dimensions/instructions";
 import * as navigation from "./dimensions/navigation";
@@ -27,12 +28,15 @@ function parseArgs() {
 function printUsage() {
   console.error("Usage: claude-beacon <command> [session.jsonl] [options]");
   console.error("");
+  console.error("Setup:");
+  console.error("  setup                Install slash commands into ~/.claude/commands/");
+  console.error("");
   console.error("Dimension commands (uses latest session if no file given):");
   for (const [id, mod] of Object.entries(DIMENSIONS)) {
     console.error(`  ${id.padEnd(14)} ${mod.name}`);
   }
   console.error("");
-  console.error("Output commands:");
+  console.error("Contribution:");
   console.error("  contribution         Generate agent contribution report (stdout)");
   console.error("  contribution --save  Write to .agent-contributions/<branch>.md");
 }
@@ -57,7 +61,9 @@ if (!command) {
   process.exit(1);
 }
 
-if (command === "contribution") {
+if (command === "setup") {
+  runSetup();
+} else if (command === "contribution") {
   await runContribution(resolveSession(sessionFile), flags.has("save"));
 } else if (command in DIMENSIONS) {
   const mod = DIMENSIONS[command as DimensionId];
