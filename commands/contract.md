@@ -1,1 +1,1 @@
-Use Bash to run `claude-beacon contract` and then $ARGUMENTS
+Use Bash to run `agent-coach contract` and then $ARGUMENTS

@@ -1,1 +1,1 @@
-Use Bash to run `claude-beacon contribution` and then $ARGUMENTS
+Use Bash to run `agent-coach contribution` and then $ARGUMENTS

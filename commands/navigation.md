@@ -1,1 +1,1 @@
-Use Bash to run `claude-beacon navigation` and then $ARGUMENTS
+Use Bash to run `agent-coach navigation` and then $ARGUMENTS

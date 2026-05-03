@@ -1,1 +1,1 @@
-Use Bash to run `claude-beacon tests` and then $ARGUMENTS
+Use Bash to run `agent-coach tests` and then $ARGUMENTS

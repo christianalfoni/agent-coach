@@ -3,13 +3,13 @@ import { join } from "path";
 import { homedir } from "os";
 
 const COMMANDS: Record<string, string> = {
-  environment: "Use Bash to run `claude-beacon environment` and then $ARGUMENTS\n",
-  instructions: "Use Bash to run `claude-beacon instructions` and then $ARGUMENTS\n",
-  navigation: "Use Bash to run `claude-beacon navigation` and then $ARGUMENTS\n",
-  contract: "Use Bash to run `claude-beacon contract` and then $ARGUMENTS\n",
-  tests: "Use Bash to run `claude-beacon tests` and then $ARGUMENTS\n",
-  verification: "Use Bash to run `claude-beacon verification` and then $ARGUMENTS\n",
-  contribution: "Use Bash to run `claude-beacon contribution` and then $ARGUMENTS\n",
+  environment: "Use Bash to run `agent-coach environment` and then $ARGUMENTS\n",
+  instructions: "Use Bash to run `agent-coach instructions` and then $ARGUMENTS\n",
+  navigation: "Use Bash to run `agent-coach navigation` and then $ARGUMENTS\n",
+  contract: "Use Bash to run `agent-coach contract` and then $ARGUMENTS\n",
+  tests: "Use Bash to run `agent-coach tests` and then $ARGUMENTS\n",
+  verification: "Use Bash to run `agent-coach verification` and then $ARGUMENTS\n",
+  contribution: "Use Bash to run `agent-coach contribution` and then $ARGUMENTS\n",
 };
 
 export function runSetup() {

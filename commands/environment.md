@@ -1,1 +1,1 @@
-Use Bash to run `claude-beacon environment` and then $ARGUMENTS
+Use Bash to run `agent-coach environment` and then $ARGUMENTS

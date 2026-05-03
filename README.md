@@ -1,21 +1,21 @@
-# claude-beacon
+# agent-coach
 
-Analyze your Claude Code sessions to improve your repo and generate better PRs.
+A coach for your Claude Code agent — analyzes sessions to improve your repo and generate better PRs.
 
 Each command reads your latest session, extracts the signal, and gives you — or the active Claude Code agent — something to act on.
 
 ## Install
 
 ```sh
-bun add -g github:christianalfoni/claude-beacon
-claude-beacon setup
+npm install -g agent-coach
+agent-coach setup
 ```
 
 `setup` installs slash commands into `~/.claude/commands/`. After restarting Claude Code, all commands are available in any session.
 
 ## Usage
 
-Run commands inside a Claude Code session. claude-beacon automatically picks up the current session — no path needed.
+Run commands inside a Claude Code session. agent-coach automatically picks up the current session — no path needed.
 
 ### Improve your repo
 
@@ -55,6 +55,6 @@ Turn the session into a PR description or a saved file for repo history:
 All commands work outside Claude Code too, with an explicit session file:
 
 ```sh
-claude-beacon environment ~/.claude/projects/.../session.jsonl
-claude-beacon contribution --save ~/.claude/projects/.../session.jsonl
+agent-coach environment ~/.claude/projects/.../session.jsonl
+agent-coach contribution --save ~/.claude/projects/.../session.jsonl
 ```

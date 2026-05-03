@@ -1,1 +1,1 @@
-Use Bash to run `claude-beacon verification` and then $ARGUMENTS
+Use Bash to run `agent-coach verification` and then $ARGUMENTS

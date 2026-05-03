@@ -1,9 +1,9 @@
 {
-  "name": "claude-beacon",
+  "name": "agent-coach",
   "version": "0.1.0",
   "type": "module",
   "bin": {
-    "claude-beacon": "./dist/index.js"
+    "agent-coach": "./dist/index.js"
   },
   "scripts": {
     "build": "bun build src/index.ts --outfile dist/index.js --target node && printf '#!/usr/bin/env node\\n' | cat - dist/index.js > dist/tmp.js && mv dist/tmp.js dist/index.js && chmod +x dist/index.js",
