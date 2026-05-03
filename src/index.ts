@@ -3,6 +3,7 @@ import { readFileSync } from "fs";
 import { preprocessSession, formatEvents } from "./preprocessor";
 import { runContribution } from "./contribution";
 import { judge } from "./judge";
+import { findCurrentSession } from "./session";
 import * as environment from "./dimensions/environment";
 import * as instructions from "./dimensions/instructions";
 import * as navigation from "./dimensions/navigation";
@@ -24,16 +25,28 @@ function parseArgs() {
 }
 
 function printUsage() {
-  console.error("Usage: claude-beacon <command> <session.jsonl> [options]");
+  console.error("Usage: claude-beacon <command> [session.jsonl] [options]");
   console.error("");
-  console.error("Dimension commands (analyze a session for improvement signals):");
+  console.error("Dimension commands (uses latest session if no file given):");
   for (const [id, mod] of Object.entries(DIMENSIONS)) {
     console.error(`  ${id.padEnd(14)} ${mod.name}`);
   }
   console.error("");
   console.error("Output commands:");
-  console.error("  contribution    Generate agent contribution report (stdout)");
-  console.error("  contribution --save  Write report to .agent-contributions/<branch>.md");
+  console.error("  contribution         Generate agent contribution report (stdout)");
+  console.error("  contribution --save  Write to .agent-contributions/<branch>.md");
+}
+
+function resolveSession(sessionFile: string | undefined): string {
+  if (sessionFile) return sessionFile;
+  try {
+    const path = findCurrentSession();
+    console.error(`Using session: ${path}`);
+    return path;
+  } catch (err) {
+    console.error(String(err));
+    process.exit(1);
+  }
 }
 
 const { flags, positional } = parseArgs();
@@ -45,22 +58,14 @@ if (!command) {
 }
 
 if (command === "contribution") {
-  if (!sessionFile) {
-    console.error("Usage: claude-beacon contribution <session.jsonl> [--save]");
-    process.exit(1);
-  }
-  await runContribution(sessionFile, flags.has("save"));
+  await runContribution(resolveSession(sessionFile), flags.has("save"));
 } else if (command in DIMENSIONS) {
-  if (!sessionFile) {
-    console.error(`Usage: claude-beacon ${command} <session.jsonl>`);
-    process.exit(1);
-  }
   const mod = DIMENSIONS[command as DimensionId];
   let raw: string;
   try {
-    raw = readFileSync(sessionFile, "utf-8");
+    raw = readFileSync(resolveSession(sessionFile), "utf-8");
   } catch {
-    console.error(`Could not read session file: ${sessionFile}`);
+    console.error(`Could not read session file`);
     process.exit(1);
   }
   const events = preprocessSession(raw);
