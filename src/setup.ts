@@ -3,12 +3,6 @@ import { join } from "path";
 import { homedir } from "os";
 
 const COMMANDS: Record<string, string> = {
-  environment: "Use Bash to run `agent-coach environment` and then $ARGUMENTS\n",
-  instructions: "Use Bash to run `agent-coach instructions` and then $ARGUMENTS\n",
-  navigation: "Use Bash to run `agent-coach navigation` and then $ARGUMENTS\n",
-  contract: "Use Bash to run `agent-coach contract` and then $ARGUMENTS\n",
-  tests: "Use Bash to run `agent-coach tests` and then $ARGUMENTS\n",
-  verification: "Use Bash to run `agent-coach verification` and then $ARGUMENTS\n",
   contribution: "Use Bash to run `agent-coach contribution` and then $ARGUMENTS\n",
 };
 
@@ -20,9 +14,11 @@ export function runSetup() {
     writeFileSync(join(commandsDir, `${name}.md`), content);
   }
 
-  const names = Object.keys(COMMANDS).map((n) => `/${n}`).join("  ");
   console.log(`✓ Installed commands to ${commandsDir}`);
-  console.log(`  ${names}`);
+  console.log(`  /contribution`);
   console.log();
-  console.log("Restart Claude Code to pick up the new commands.");
+  console.log("Restart Claude Code to pick up the new command.");
+  console.log();
+  console.log("Usage inside Claude Code:");
+  console.log("  /contribution Create a PR with this as the description");
 }

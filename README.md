@@ -2,8 +2,6 @@
 
 A coach for your Claude Code agent — analyzes sessions to improve your repo and generate better PRs.
 
-Each command reads your latest session, extracts the signal, and gives you — or the active Claude Code agent — something to act on.
-
 ## Install
 
 ```sh
@@ -11,37 +9,46 @@ npm install -g agent-coach
 agent-coach setup
 ```
 
-`setup` installs slash commands into `~/.claude/commands/`. After restarting Claude Code, all commands are available in any session.
+`setup` installs the `/contribution` slash command into `~/.claude/commands/`. Restart Claude Code to activate it.
 
 ## Usage
 
-Run commands inside a Claude Code session. agent-coach automatically picks up the current session — no path needed.
+### Interactive mode
 
-### Improve your repo
+Run `agent-coach` with no arguments to launch the interactive session browser:
 
-Evaluate a quality dimension and tell Claude what to do with the findings:
-
-```
-/environment fix the issues you find
-/instructions update CLAUDE.md based on these findings
-/navigation suggest structural improvements
-/contract tighten the types
-/tests add missing coverage
-/verification document the verification commands in CLAUDE.md
+```sh
+agent-coach
 ```
 
-### Generate a contribution report
+- Pick a session from your current project
+- Pick a dimension to evaluate, or generate a contribution report
+- Output goes to stdout
 
-Turn the session into a PR description or a saved file for repo history:
+### Claude Code command
+
+After running `setup`, use `/contribution` inside any Claude Code session:
 
 ```
-/contribution write a PR description from this
-/contribution --save and commit the file
+/contribution Create a PR with this as the description
+/contribution summarize what changed and open a PR
 ```
+
+`agent-coach contribution` picks up the latest session automatically, generates the report, and Claude acts on your instructions.
+
+To save the report to the repo instead of stdout:
+
+```sh
+agent-coach contribution --save
+```
+
+Writes to `.agent-contributions/<branch>.md`.
 
 ## Dimensions
 
-| Command | What it evaluates |
+Each dimension analyzes the current session for signals relevant to that aspect of agent-readiness. Findings reflect what actually happened — not a synthetic audit.
+
+| Dimension | What it evaluates |
 |---|---|
 | `environment` | Clean setup — deps, env vars, build and test commands |
 | `instructions` | CLAUDE.md quality — are agents told what they need? |
@@ -52,7 +59,7 @@ Turn the session into a PR description or a saved file for repo history:
 
 ## Direct CLI usage
 
-All commands work outside Claude Code too, with an explicit session file:
+All commands work with an explicit session file:
 
 ```sh
 agent-coach environment ~/.claude/projects/.../session.jsonl
