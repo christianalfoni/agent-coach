@@ -1,6 +1,5 @@
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from "fs";
 import { join } from "path";
-import { spawnSync } from "child_process";
 
 const PR_TEMPLATE = `## [User story title — written as consumer value]
 
@@ -140,13 +139,7 @@ Using evaluation-prompt.md as your instructions, evaluate all the session transc
 Print the full evaluation to the terminal. Remind the user to review it before adding reviewers to the PR.
 `;
 
-function resolveBinaryPath(): string {
-  const result = spawnSync("which", ["claude-debrief"], { encoding: "utf-8" });
-  const resolved = result.stdout?.trim();
-  return resolved || "claude-debrief"; // fall back to name if which fails
-}
-
-function mergeStopHook(settingsPath: string, binaryPath: string): void {
+function mergeStopHook(settingsPath: string): void {
   let settings: Record<string, unknown> = {};
 
   if (existsSync(settingsPath)) {
@@ -168,7 +161,7 @@ function mergeStopHook(settingsPath: string, binaryPath: string): void {
 
   if (alreadyRegistered) return;
 
-  stopHooks.push({ hooks: [{ type: "command", command: `${binaryPath} capture` }] });
+  stopHooks.push({ hooks: [{ type: "command", command: "npx claude-debrief capture" }] });
   hooks.Stop = stopHooks;
   settings.hooks = hooks;
 
@@ -205,10 +198,9 @@ export function runInit(): void {
   writeFileSync(prCommandPath, PR_SLASH_COMMAND, "utf-8");
   console.log("Created .claude/commands/debrief.md");
 
-  // Register Stop hook in .claude/settings.json using the full binary path
-  const binaryPath = resolveBinaryPath();
-  mergeStopHook(settingsPath, binaryPath);
-  console.log(`Registered Stop hook in .claude/settings.json (${binaryPath} capture)`);
+  // Register Stop hook in .claude/settings.json
+  mergeStopHook(settingsPath);
+  console.log("Registered Stop hook in .claude/settings.json");
 
   console.log(
     "\nclaude-debrief initialised! Sessions will be captured automatically.\n" +
