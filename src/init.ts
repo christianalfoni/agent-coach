@@ -55,7 +55,7 @@ Produce output in this exact format — nothing more:
 [2–3 bullet points max — specific changes to CLAUDE.md, tooling, or workflow that would raise the score on a future session. Omit if no clear suggestions.]
 `;
 
-const PR_SLASH_COMMAND = `You are executing the /pr command for claude-debrief. Your job is to:
+const PR_SLASH_COMMAND = `You are executing the /debrief command for claude-debrief. Your job is to:
 1. Synthesize a rich PR description from session transcripts + git diff
 2. Create or update the GitHub PR
 3. Evaluate the agent's performance and print it to the terminal
@@ -174,7 +174,7 @@ export function runInit(): void {
 
   const prTemplatePath = join(configDir, "pr-template.md");
   const evalPromptPath = join(configDir, "evaluation-prompt.md");
-  const prCommandPath = join(commandsDir, "pr.md");
+  const prCommandPath = join(commandsDir, "debrief.md");
   const settingsPath = join(".claude", "settings.json");
 
   // Error if already initialised
@@ -196,7 +196,7 @@ export function runInit(): void {
   // Create .claude/commands/pr.md slash command
   mkdirSync(commandsDir, { recursive: true });
   writeFileSync(prCommandPath, PR_SLASH_COMMAND, "utf-8");
-  console.log("Created .claude/commands/pr.md");
+  console.log("Created .claude/commands/debrief.md");
 
   // Register Stop hook in .claude/settings.json
   mergeStopHook(settingsPath);
@@ -204,6 +204,6 @@ export function runInit(): void {
 
   console.log(
     "\nclaude-debrief initialised! Sessions will be captured automatically.\n" +
-      "Run /pr in a Claude Code session to create a PR with agent evaluation."
+      "Run /debrief in a Claude Code session to create a PR with agent evaluation."
   );
 }
