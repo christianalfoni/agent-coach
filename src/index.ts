@@ -12,6 +12,8 @@ import * as contract from "./dimensions/contract";
 import * as tests from "./dimensions/tests";
 import * as verification from "./dimensions/verification";
 import { runSetup } from "./setup";
+import { runCapture } from "./capture";
+import { runInit } from "./init";
 
 const DIMENSIONS = { environment, instructions, navigation, contract, tests, verification };
 type DimensionId = keyof typeof DIMENSIONS;
@@ -95,6 +97,16 @@ async function runInteractive() {
 }
 
 async function runDirect(command: string, sessionFile: string | undefined, flags: Set<string>) {
+  if (command === "capture") {
+    runCapture();
+    return;
+  }
+
+  if (command === "init") {
+    runInit();
+    return;
+  }
+
   if (command === "setup") {
     runSetup();
     return;
