@@ -1,67 +1,78 @@
-# agent-coach
+# claude-debrief
 
-A coach for your Claude Code agent — analyzes sessions to improve your repo and generate better PRs.
+Captures your Claude Code sessions and turns them into rich PRs — with an agent performance evaluation before you add reviewers.
+
+## How it works
+
+- A **Stop hook** captures every Claude Code session as compressed markdown to `~/.claude-debrief/sessions/`
+- The **`/pr` slash command** reads all sessions for the current branch, synthesizes a PR description from the reasoning in those sessions (not just the diff), creates or updates the GitHub PR, then prints an agent evaluation to the terminal
 
 ## Install
 
 ```sh
-npm install -g agent-coach
-agent-coach setup
+npm install -g claude-debrief
 ```
 
-`setup` installs the `/contribution` slash command into `~/.claude/commands/`. Restart Claude Code to activate it.
+Then initialise in each project you want to use it in:
+
+```sh
+claude-debrief init
+```
+
+`init` does four things:
+1. Creates `.claude-debrief/pr-template.md` — edit to fit your project
+2. Creates `.claude-debrief/evaluation-prompt.md` — edit to tune the evaluation
+3. Creates `.claude/commands/pr.md` — the `/pr` slash command
+4. Registers the Stop hook in `.claude/settings.json`
 
 ## Usage
 
-### Interactive mode
+Work with Claude Code as normal — sessions are captured automatically.
 
-Run `agent-coach` with no arguments to launch the interactive session browser:
-
-```sh
-agent-coach
-```
-
-- Pick a session from your current project
-- Pick a dimension to evaluate, or generate a contribution report
-- Output goes to stdout
-
-### Claude Code command
-
-After running `setup`, use `/contribution` inside any Claude Code session:
+When you're ready to open a PR, run inside a Claude Code session:
 
 ```
-/contribution Create a PR with this as the description
-/contribution summarize what changed and open a PR
+/pr
 ```
 
-`agent-coach contribution` picks up the latest session automatically, generates the report, and Claude acts on your instructions.
+Claude will:
+1. Read all sessions for the current branch from `~/.claude-debrief/`
+2. Synthesize a PR description using your template (before/after behavior, decisions, references)
+3. Create or update the GitHub PR via `gh`
+4. Print an agent evaluation to the terminal — review it before adding reviewers
 
-To save the report to the repo instead of stdout:
+## Configuration
 
-```sh
-agent-coach contribution --save
+Both files are created by `init` and are meant to be edited and committed:
+
+| File | Purpose |
+|------|---------|
+| `.claude-debrief/pr-template.md` | Shape of the PR description |
+| `.claude-debrief/evaluation-prompt.md` | How to evaluate agent sessions |
+
+## Agent evaluation
+
+The evaluation is printed to the terminal after the PR is created — not posted to GitHub. It's a prompt to reflect before handing off to reviewers:
+
+```
+## Agent Evaluation  47/60
+
+| Dimension    | Score |
+|--------------|-------|
+| Environment  | 8/10  |
+| Instructions | 7/10  |
+| Navigation   | 9/10  |
+| Contract     | 9/10  |
+| Tests        | 6/10  |
+| Verification | 8/10  |
+
+**Before you add reviewers**
+- Run pnpm lint — not run this session despite CLAUDE.md guidance
+
+**Suggested improvements**
+- Add a "one logical change per commit" rule to CLAUDE.md
 ```
 
-Writes to `.agent-contributions/<branch>.md`.
+## Session storage
 
-## Dimensions
-
-Each dimension analyzes the current session for signals relevant to that aspect of agent-readiness. Findings reflect what actually happened — not a synthetic audit.
-
-| Dimension | What it evaluates |
-|---|---|
-| `environment` | Clean setup — deps, env vars, build and test commands |
-| `instructions` | CLAUDE.md quality — are agents told what they need? |
-| `navigation` | Codebase orientation — can an agent find things quickly? |
-| `contract` | Type and schema surface — are data shapes explicit? |
-| `tests` | Test safety net — do tests give an agent confidence? |
-| `verification` | Self-verification — can an agent confirm its own work? |
-
-## Direct CLI usage
-
-All commands work with an explicit session file:
-
-```sh
-agent-coach environment ~/.claude/projects/.../session.jsonl
-agent-coach contribution --save ~/.claude/projects/.../session.jsonl
-```
+Sessions are stored at `~/.claude-debrief/sessions/<workspace>/<branch>/<session-id>.md` and cleaned up automatically after 30 days.
